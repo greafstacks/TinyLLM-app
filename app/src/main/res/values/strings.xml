@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TinyLLM</string>
+    <string name="hint_text">Type something…</string>
+    <string name="send">Send</string>
+    <string name="loading">Loading brain…</string>
+    <string name="ready">Ready. Say something.</string>
+    <string name="generating">Thinking…</string>
+    <string name="length_label">Reply length: %1$d characters</string>
+</resources>
