@@ -15,7 +15,27 @@ android {
         versionName "1.0"
     }
 
+    // Fixed debug signing key, committed as app/debug.keystore. Without this,
+    // Gradle auto-generates a NEW random debug key on any machine where
+    // ~/.android/debug.keystore doesn't already exist -- which is every
+    // single GitHub Actions run, since it's always a fresh machine. That
+    // means every build would get a different signature, and Android
+    // refuses to install an update whose signature doesn't match the
+    // currently-installed app. Pinning one real keystore file is what
+    // makes "install the new APK over the old one" actually work.
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
         }
@@ -34,5 +54,6 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.activity:activity-ktx:1.9.0'
     implementation 'com.google.android.material:material:1.12.0'
 }
