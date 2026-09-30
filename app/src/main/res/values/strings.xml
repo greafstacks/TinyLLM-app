@@ -2,8 +2,11 @@
     <string name="app_name">TinyLLM</string>
     <string name="hint_text">Type something…</string>
     <string name="send">Send</string>
-    <string name="loading">Loading brain…</string>
-    <string name="ready">Ready. Say something.</string>
+    <string name="load_model">Load Model</string>
+    <string name="loading">Loading…</string>
     <string name="generating">Thinking…</string>
+    <string name="no_model">No model loaded — tap \"Load Model\" and pick a model.bin file</string>
+    <string name="model_loaded">Model loaded: %1$s</string>
+    <string name="load_failed">Couldn\'t load that file: %1$s</string>
     <string name="length_label">Reply length: %1$d characters</string>
 </resources>
