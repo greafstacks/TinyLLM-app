@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lengthSeek: SeekBar
 
     private var model: TransformerModel? = null
+    private val transcript = StringBuilder()
 
     // Must be registered unconditionally during activity construction (not
     // inside onCreate's body, and never inside a click listener) -- that's
@@ -88,10 +89,14 @@ class MainActivity : AppCompatActivity() {
 
             thread {
                 try {
-                    val tokens = currentModel.tokenize(prompt)
-                    val continuation = currentModel.generate(tokens, maxChars)
+                    // Chat format the model was trained on: U+E000 message U+E001 -> reply, ended by a newline.
+                    val tokens = currentModel.tokenize(USER_MARK + prompt.trim() + BOT_MARK)
+                    val reply = currentModel.generate(tokens, maxChars, stopAt = '\n').trim()
                     runOnUiThread {
-                        output.text = prompt + continuation
+                        transcript.append("You: ").append(prompt.trim()).append("\nTinyLLM: ")
+                            .append(reply).append("\n\n")
+                        output.text = transcript.toString()
+                        input.setText("")
                         statusText.text = previousStatus
                         sendButton.isEnabled = true
                     }
@@ -158,5 +163,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_MODEL_URI = "model_uri"
+        private const val USER_MARK = "\uE000"
+        private const val BOT_MARK = "\uE001"
     }
 }

@@ -313,6 +313,7 @@ class TransformerModel private constructor(private val w: Weights) {
         temperature: Double = 0.9,
         topK: Int = 40,
         seed: Long? = null,
+        stopAt: Char? = null, // chat mode: end the reply at this character (e.g. '\n') instead of running to maxChars
     ): String {
         if (maxChars <= 0) return ""
         val rng = if (seed != null) Random(seed) else Random.Default
@@ -344,6 +345,13 @@ class TransformerModel private constructor(private val w: Weights) {
         while (out.length < maxChars) {
             val next = sample(logits, temperature, topK, rng)
             out.append(w.tokens[next])
+            if (stopAt != null) {
+                val stopIdx = out.indexOf(stopAt.toString())
+                if (stopIdx >= 0) {
+                    out.setLength(stopIdx)
+                    return out.toString()
+                }
+            }
             if (out.length < maxChars) feed(next)
         }
         out.setLength(maxChars)
